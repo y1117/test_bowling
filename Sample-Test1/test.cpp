@@ -13,3 +13,12 @@ TEST_F(GameFixture, AllZeroPoints) {
     }
     EXPECT_EQ(0, game.Score());
 }
+TEST_F(GameFixture, All1Points) {
+    for (int i = 0; i < TOTAL_ROLL_TRY; ++i) {
+        game.Roll(1);
+    }
+    EXPECT_EQ(20, game.Score());
+}
+
+
+
