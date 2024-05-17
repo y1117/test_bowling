@@ -6,72 +6,43 @@ const int SPEICAL_POINT = 10;
 class Game {
 public:
     Game() :
-        vPoints{ {} },
-        eachFramePoint{ 0 },
-        isFirstTry{ true },
-        isSpare{ false },
-        strikeCnt{ 0 }
+        socre{0},
+        current{0},
+        rollNumber{ {} }
     {
 
     }
     void Roll(int point) {
-        vPoints.push_back(point);
+        rollNumber[current] = point;
+        current++;
     }
-
-    bool checkStrike() {
-        if (!strikeCnt) return false;
-
-        strikeCnt++;
-        if (strikeCnt == 3) 
-            strikeCnt = 0;
-        
-        return true;
-    }
-
-    bool checkSpare() {
-        if (!isFirstTry) return false;
-
-        if (!isSpare) return false;
-
-        isSpare = false;
-        return true;
-    }
-
-    int getSpecialPoint(int point) {
-        if (checkStrike()) return point;
-        if (checkSpare()) return point;
-
-        if (isFirstTry) {
-            eachFramePoint = point;
-            if (eachFramePoint == SPEICAL_POINT) {
-                strikeCnt = 1;
-            }
-            isFirstTry = false;
-        }
-        else {
-            eachFramePoint += point;
-            isFirstTry = true;
-            if (eachFramePoint == SPEICAL_POINT) {
-                isSpare = true;
-            }
-        }
-        return 0;
-    }
-
     int Score() {
         int result = 0;
-        for (auto it = vPoints.begin(); it != vPoints.end(); ++it) {
-            if (*it == 0) continue;
-
-            result += getSpecialPoint(*it);
-            result += *it;
+        int frameIndex = 0;
+        for (int frame = 0; frame < 10; frame++) {
+            if (rollNumber[frameIndex] == 10) {
+                result += 10;
+                result += rollNumber[frameIndex+1] + rollNumber[frameIndex + 2];
+                frameIndex += 1;
+            }
+            else if (isSpare(frameIndex)) {
+                result += 10;
+                result += rollNumber[frameIndex + 2];
+                frameIndex += 2;
+            }
+            else {
+                result += rollNumber[frameIndex] + rollNumber[frameIndex + 1];
+                frameIndex += 2;
+            }
         }
         return result;
     }
+    bool isSpare(int frameIndex)
+    {
+        return rollNumber[frameIndex] + rollNumber[frameIndex + 1] == 10;
+    }
 private:
-    vector<int> vPoints;
-    int eachFramePoint;
-    bool isFirstTry;
-    bool isSpare;
-    int strikeCnt;
+    int rollNumber[20];
+    int current;
+    int socre;
 };
