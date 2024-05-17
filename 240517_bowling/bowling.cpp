@@ -9,7 +9,7 @@ public:
         vPoints{ {} },
         eachFramePoint{ 0 },
         isFirstTry{ true },
-        isSpare { false },
+        isSpare{ false },
         strikeCnt{ 0 }
     {
 
@@ -18,25 +18,35 @@ public:
         vPoints.push_back(point);
     }
 
-    int getSparePoint(int point) {
-        int result = 0;
-        if (strikeCnt) {
-            result = point;
-            strikeCnt++;
-            if (strikeCnt == 3) 
-                strikeCnt = 0;
-        }
+    bool checkStrike() {
+        if (!strikeCnt) return false;
+
+        strikeCnt++;
+        if (strikeCnt == 3) 
+            strikeCnt = 0;
+        
+        return true;
+    }
+
+    bool checkSpare() {
+        if (!isFirstTry) return false;
+
+        if (!isSpare) return false;
+
+        isSpare = false;
+        return true;
+    }
+
+    int getSpecialPoint(int point) {
+        if (checkStrike()) return point;
+        if (checkSpare()) return point;
+
         if (isFirstTry) {
             eachFramePoint = point;
             if (eachFramePoint == SPEICAL_POINT) {
                 strikeCnt = 1;
             }
             isFirstTry = false;
-            if (isSpare) {
-                isSpare = false;
-                result = point;
-                return result;
-            }
         }
         else {
             eachFramePoint += point;
@@ -45,7 +55,7 @@ public:
                 isSpare = true;
             }
         }
-        return result;
+        return 0;
     }
 
     int Score() {
@@ -53,7 +63,7 @@ public:
         for (auto it = vPoints.begin(); it != vPoints.end(); ++it) {
             if (*it == 0) continue;
 
-            result += getSparePoint(*it);
+            result += getSpecialPoint(*it);
             result += *it;
         }
         return result;
