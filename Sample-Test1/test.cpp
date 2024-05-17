@@ -21,13 +21,24 @@ TEST_F(GameFixture, All1Points) {
 }
 TEST_F(GameFixture, Spare1_OthersAllZeroPoints) {
     game.Roll(5);
-    game.Roll(5);
+    game.Roll(5); // spare
     game.Roll(3);
     for (int i = 3; i < TOTAL_ROLL_TRY; ++i) {
         game.Roll(0);
     }
     EXPECT_EQ(10+3+3, game.Score());
 }
+TEST_F(GameFixture, Strike1_OthersAllZeroPoints) {
+    game.Roll(10); // strike
+    game.Roll(3);
+    game.Roll(4);
+    for (int i = 4; i < TOTAL_ROLL_TRY; ++i) {
+        game.Roll(0);
+    }
+    EXPECT_EQ(10+7+7, game.Score());
+}
+
+
 
 
 

@@ -9,7 +9,8 @@ public:
         vPoints{ {} },
         eachFramePoint{ 0 },
         isFirstTry{ true },
-        isSpare { false}
+        isSpare { false },
+        strikeCnt{ 0 }
     {
 
     }
@@ -19,8 +20,17 @@ public:
 
     int getSparePoint(int point) {
         int result = 0;
+        if (strikeCnt) {
+            result = point;
+            strikeCnt++;
+            if (strikeCnt == 3) 
+                strikeCnt = 0;
+        }
         if (isFirstTry) {
             eachFramePoint = point;
+            if (eachFramePoint == SPEICAL_POINT) {
+                strikeCnt = 1;
+            }
             isFirstTry = false;
             if (isSpare) {
                 isSpare = false;
@@ -53,4 +63,5 @@ private:
     int eachFramePoint;
     bool isFirstTry;
     bool isSpare;
+    int strikeCnt;
 };
